@@ -6,6 +6,10 @@ import re
 from inflection import dasherize, underscore
 
 
+def generate_serializer_base_name(model_cls):
+    return dasherize(underscore(model_cls.__name__))
+
+
 def generate_detail_view_name(base_name):
     default_detail_name = base_name + "-detail"
     if settings.API_URL_NAMESPACE:
@@ -132,7 +136,7 @@ class JsFriendlyFieldsRenamingSerializer(serializers.ModelSerializer):
 
 
 def create_standard_serializer_class(model_cls):
-    base_name = dasherize(underscore(model_cls.__name__))
+    base_name = generate_serializer_base_name(model_cls)
 
     class Serializer(OptimizeUrlFieldsSerializer, JsFriendlyFieldsRenamingSerializer):
         DEFAULT_BASE_NAME = base_name
