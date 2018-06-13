@@ -9,9 +9,8 @@ setup(
     name='drf_shortcuts',
     version=drf_shortcuts.__version__,
     description="Common shortcuts for speeding up your development based on Django REST Framework (DRF).",
-    long_description=(
-        open('README.md').read()
-    ),
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     author='Daniel Ivanov',
     author_email='megaden4eg@gmail.com',
     url='https://github.com/megaden/drf-shortcuts',
@@ -27,4 +26,5 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
+    install_requires=['inflection>=0.3'],
 )
