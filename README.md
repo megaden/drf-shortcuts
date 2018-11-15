@@ -1,7 +1,7 @@
 # DRF Shortcuts
 
-[![build-status-image]][travis]
-[![pypi-version]][pypi]
+[![Build Status](https://travis-ci.org/megaden/drf-shortcuts.svg?branch=master)](https://travis-ci.org/megaden/drf-shortcuts)
+[![PyPI Version](https://img.shields.io/pypi/v/drf_shortcuts.svg)](https://img.shields.io/pypi/v/drf_shortcuts.svg)
 
 Common shortcuts for speeding up your development based on Django REST Framework (DRF).
 
