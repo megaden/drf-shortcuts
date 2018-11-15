@@ -3,5 +3,5 @@ __pycache__/
 *.pyc
 .idea/
 dist/
-drf_shortcuts.egg-info/
+*.egg-info/
 .tox/
