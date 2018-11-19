@@ -12,7 +12,7 @@ def generate_serializer_base_name(model_cls):
 
 def generate_detail_view_name(base_name):
     default_detail_name = base_name + "-detail"
-    if settings.API_URL_NAMESPACE:
+    if hasattr(settings, 'API_URL_NAMESPACE'):
         return "{}:{}".format(settings.API_URL_NAMESPACE, default_detail_name)
     return default_detail_name
 
@@ -29,20 +29,18 @@ def get_entity_pk(serializer):
     return view_kwargs.get('pk') if 'pk' in view_kwargs else None
 
 
-def get_required_field_value(data, field_name, serializer, fetch_model):
+def get_required_field_value(data, field_name, pk, fetch_model):
     if field_name in data:
         return data.get(field_name)
-    pk = get_entity_pk(serializer)
     assert pk is not None, "Update or partial update is assumed"
     field_value = getattr(fetch_model(pk), field_name)
     assert field_value is not None, "Unexpectedly required field value is None"
     return field_value
 
 
-def get_optional_field_value(data, field_name, serializer, fetch_model):
+def get_optional_field_value(data, field_name, pk, fetch_model):
     if field_name in data:
         return data.get(field_name)
-    pk = get_entity_pk(serializer)
     return None if pk is None else getattr(fetch_model(pk), field_name)
 
 

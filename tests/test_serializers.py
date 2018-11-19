@@ -1,8 +1,31 @@
-from django.test import TestCase
-from rest_framework.serializers import ModelSerializer
+from django.test import TestCase, override_settings
+from rest_framework.serializers import Serializer, CharField
 from rest_framework.views import APIView
 
-from drf_shortcuts.serializers import get_entity_pk
+from drf_shortcuts.serializers import (
+    generate_detail_view_name, rename_serializer_field, get_entity_pk, get_required_field_value,
+    get_optional_field_value
+)
+
+
+class GenerateDetailViewNameTests(TestCase):
+    def test_returns_basic_name_by_default(self):
+        self.assertEqual('foo-detail', generate_detail_view_name('foo'))
+
+    @override_settings(API_URL_NAMESPACE='bar')
+    def test_returns_prefixed_name_if_set(self):
+        self.assertEqual('bar:foo-detail', generate_detail_view_name('foo'))
+
+
+class RenameSerializerFieldTests(TestCase):
+    def test_moves_field_under_new_name(self):
+        serializer = Serializer()
+        field = CharField()
+        serializer.fields['foo'] = field
+        rename_serializer_field(serializer, 'foo', 'bar')
+        with self.assertRaises(KeyError):
+            _ = serializer.fields['foo']
+        self.assertEqual(field, serializer.fields['bar'])
 
 
 class GetEntityPkTests(TestCase):
@@ -12,15 +35,53 @@ class GetEntityPkTests(TestCase):
         self.assertTrue('context' in str(excCtx.exception))
 
     def test_returns_none_if_pk_is_missing(self):
-        serializer = ModelSerializer()
+        serializer = Serializer()
         view = APIView()
         view.kwargs = {}
         serializer.context['view'] = view
         self.assertIsNone(get_entity_pk(serializer))
 
     def test_returns_pk_value_if_present(self):
-        serializer = ModelSerializer()
+        serializer = Serializer()
         view = APIView()
         view.kwargs = {'pk': 'foo'}
         serializer.context['view'] = view
         self.assertEqual('foo', get_entity_pk(serializer))
+
+
+class ModelStub:
+    foo = None
+
+    def __init__(self, value=None):
+        self.foo = value
+
+
+class GetRequiredFieldValueTests(TestCase):
+    def test_returns_value_from_data_if_present(self):
+        self.assertEqual(1, get_required_field_value({'foo': 1}, 'foo', None, None))
+
+    def test_throws_if_pk_not_available(self):
+        with self.assertRaises(AssertionError) as excCtx:
+            get_required_field_value({}, 'foo', None, None)
+        self.assertTrue('update is assumed' in str(excCtx.exception))
+
+    def test_throws_if_required_field_value_is_missing(self):
+        with self.assertRaises(AssertionError) as excCtx:
+            get_required_field_value({}, 'foo', 'bar', lambda x: ModelStub() if x == 'bar' else None)
+        self.assertTrue('required field value' in str(excCtx.exception))
+
+    def test_returns_value_from_model_if_available(self):
+        value = get_required_field_value({}, 'foo', 'bar', lambda x: ModelStub('baz') if x == 'bar' else None)
+        self.assertEqual('baz', value)
+
+
+class GetOptionalFieldValueTests(TestCase):
+    def test_returns_value_from_data_if_present(self):
+        self.assertEqual(1, get_optional_field_value({'foo': 1}, 'foo', None, None))
+
+    def test_returns_none_if_pk_not_available(self):
+        self.assertIsNone(get_optional_field_value({}, 'foo', None, None))
+
+    def test_returns_value_from_model_if_available(self):
+        value = get_optional_field_value({}, 'foo', 'bar', lambda x: ModelStub('baz') if x == 'bar' else None)
+        self.assertEqual('baz', value)
