@@ -44,7 +44,8 @@ def get_optional_field_value(data, field_name, pk, fetch_model):
     return None if pk is None else getattr(fetch_model(pk), field_name)
 
 
-class OptimizeUrlFieldsSerializer(serializers.ModelSerializer):
+# noinspection PyAbstractClass
+class OptimizeUrlFieldsSerializer(serializers.Serializer):
     explicit_url_field_names = []
 
     def __init__(self, instance=None, data=empty, **kwargs):
