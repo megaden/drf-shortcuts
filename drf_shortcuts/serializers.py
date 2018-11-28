@@ -69,7 +69,10 @@ class OptimizeUrlFieldsSerializer(serializers.Serializer):
                 del self.fields[field_name]
 
 
-class ValidateAndInsertAuthorSerializer(serializers.ModelSerializer):
+# noinspection PyAbstractClass
+# TODO: Deprecate & replace with InsertAuthorSerializer.
+#       Author check should be permission-based instead.
+class ValidateAndInsertAuthorSerializer(serializers.Serializer):
     author_field_name = None
 
     _author_inserted = False

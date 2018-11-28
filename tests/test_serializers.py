@@ -7,7 +7,7 @@ from rest_framework.request import Request
 
 from drf_shortcuts.serializers import (
     generate_detail_view_name, rename_serializer_field, get_entity_pk, get_required_field_value,
-    get_optional_field_value, OptimizeUrlFieldsSerializer
+    get_optional_field_value, OptimizeUrlFieldsSerializer, ValidateAndInsertAuthorSerializer
 )
 
 
@@ -131,3 +131,7 @@ class OptimizeUrlFieldsSerializerTests(TestCase):
 
         serializer = SerializerWithExplicitFields()
         self.assertEqual(0, len(serializer.fields))
+
+
+class ValidateAndInsertAuthorSerializerTests(TestCase):
+    pass
