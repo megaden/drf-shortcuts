@@ -2,3 +2,4 @@ Django==2.0.9
 djangorestframework==3.8.2
 inflection==0.3.1
 tox==3.5.3
+mkdocs==1.0.4

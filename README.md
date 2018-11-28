@@ -16,9 +16,9 @@ DRF shortcuts library allows you to:
 
 ## Requirements
 
-- Python 3.6
-- Django 2.0
-- Django REST Framework 3.8
+- Python 3.6+
+- Django 2.0+
+- Django REST Framework 3.8+
 
 ## Installation
 
@@ -83,6 +83,6 @@ Customizing a view using shortcuts:
 
         # ... rest of the view code ...
 
-## API Reference
+## Documentation
 
-TO BE DEFINED
+Visit [project's GitHub Pages](https://megaden.github.io/drf-shortcuts/).
