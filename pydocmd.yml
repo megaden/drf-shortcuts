@@ -1,0 +1,10 @@
+site_name: DRF Shortcuts
+
+generate:
+  - baz/cool-stuff.md:
+    - drf_shortcuts.serializers+
+
+pages:
+- Home: index.md << ./README.md
+- foobar.baz:
+  - Cool Stuff: baz/cool-stuff.md
