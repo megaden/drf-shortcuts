@@ -14,3 +14,4 @@ DRF shortcuts library allows you to:
 - [Requirements & Installation](setup.md)
 - [Examples](examples.md)
 - [API Reference](generated/drf_shortcuts.md)
+- [GitHub Repo](https://github.com/megaden/drf-shortcuts)
