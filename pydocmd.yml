@@ -7,10 +7,14 @@ generate:
     - drf_shortcuts.urls++
 
 pages:
-- Home: index.md
-- API Overview:
+- Home:
+  - Overview: index.md
+  - Requirements & Installation: setup.md
+  - Examples: examples.md
+- API Reference:
   - package: generated/drf_shortcuts.md
   - urls module: generated/drf_shortcuts-urls.md
+  - rest of the package: tbc.md
 
 docs_dir: docs
 theme: readthedocs

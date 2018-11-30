@@ -1,8 +1,6 @@
-# DRF Shortcuts
+# Summary
 
-Common shortcuts for speeding up your development based on Django REST Framework (DRF).
-
-## Overview
+Shortcuts for speeding up your development based on Django REST Framework (DRF).
 
 DRF shortcuts library allows you to:
 
@@ -11,75 +9,8 @@ DRF shortcuts library allows you to:
 - Create JS-based clients friendly serializer class for your Django model using a one-liner `create_standard_serializer_class(YourModel)`.
 - Use library classes & helper functions to tailor your own DRF shortcuts.
 
-## Requirements
+# Quick Links
 
-- Python 3.6+
-- Django 2.0+
-- Django REST Framework 3.8+
-
-## Installation
-
-Install using pip:
-
-    pip install drf-shortcuts
-
-## Examples
-
-Exposing a Django model:
-
-    # in urls.py
-
-    from rest_framework.routers import DefaultRouter
-    from drf_shortcuts.urls import register_standard_endpoint
-
-    from my_fancy_app.models import MyModel
-
-
-    router = DefaultRouter(trailing_slash=False)
-
-    register_standard_endpoint(router, MyModel)
-
-    # ... more URL configuration code here ...
-
-    urlpatterns = router.urls
-
-Creating a viewset class:
-
-    # in views.py
-
-    from drf_shortcuts.views import create_standard_viewset_class
-
-    from my_fancy_app.models import MyModel
-
-    MyModelViewSet = create_standard_viewset_class(MyModel)
-
-Creating a serializer class:
-
-    # in serializers.py
-
-    from drf_shortcuts.serializers import create_standard_serializer_class
-
-    from my_fancy_app.models import MyModel
-
-    MyModelSerializer = create_standard_serializer_class(MyModel)
-
-Customizing a view using shortcuts:
-
-    # in views.py
-
-    from rest_framework.viewsets import ReadOnlyModelViewSet
-    from drf_shortcuts.views import append_search_info_to_docstring
-    from drf_shortcuts.serializers import create_standard_serializer_class
-
-    from my_fancy_app.models import MyModel
-
-
-    @append_search_info_to_docstring
-    class MyModelViewSet(ReadOnlyModelViewSet):
-        serializer_class = create_standard_serializer_class(MyModel)
-
-        # ... rest of the view code ...
-
-## API Reference
-
-Explore the rest of the documentation for detailed API reference.
+- [Requirements & Installation](setup.md)
+- [Examples](examples.md)
+- [API Reference](generated/drf_shortcuts.md)

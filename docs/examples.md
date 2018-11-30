@@ -1,0 +1,56 @@
+# Examples
+
+## Exposing a Django model
+
+    # in urls.py
+
+    from rest_framework.routers import DefaultRouter
+    from drf_shortcuts.urls import register_standard_endpoint
+
+    from my_fancy_app.models import MyModel
+
+
+    router = DefaultRouter(trailing_slash=False)
+
+    register_standard_endpoint(router, MyModel)
+
+    # ... more URL configuration code here ...
+
+    urlpatterns = router.urls
+
+## Creating a viewset class
+
+    # in views.py
+
+    from drf_shortcuts.views import create_standard_viewset_class
+
+    from my_fancy_app.models import MyModel
+
+    MyModelViewSet = create_standard_viewset_class(MyModel)
+
+## Creating a serializer class
+
+    # in serializers.py
+
+    from drf_shortcuts.serializers import create_standard_serializer_class
+
+    from my_fancy_app.models import MyModel
+
+    MyModelSerializer = create_standard_serializer_class(MyModel)
+
+## Customizing a view using helpers
+
+    # in views.py
+
+    from rest_framework.viewsets import ReadOnlyModelViewSet
+    from drf_shortcuts.views import append_search_info_to_docstring
+    from drf_shortcuts.serializers import create_standard_serializer_class
+
+    from my_fancy_app.models import MyModel
+
+
+    @append_search_info_to_docstring
+    class MyModelViewSet(ReadOnlyModelViewSet):
+        serializer_class = create_standard_serializer_class(MyModel)
+
+        # ... rest of the view code ...
