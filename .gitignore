@@ -6,3 +6,4 @@ dist/
 *.egg-info/
 .tox/
 _build/
+mkdocs.yml

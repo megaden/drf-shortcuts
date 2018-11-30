@@ -1,10 +1,16 @@
 site_name: DRF Shortcuts
 
 generate:
-  - baz/cool-stuff.md:
-    - drf_shortcuts.serializers+
+  - generated/drf_shortcuts.md:
+    - drf_shortcuts
+  - generated/drf_shortcuts-urls.md:
+    - drf_shortcuts.urls++
 
 pages:
-- Home: index.md << ./README.md
-- foobar.baz:
-  - Cool Stuff: baz/cool-stuff.md
+- Home: index.md
+- API Overview:
+  - package: generated/drf_shortcuts.md
+  - urls module: generated/drf_shortcuts-urls.md
+
+docs_dir: docs
+theme: readthedocs
