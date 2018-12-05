@@ -24,9 +24,9 @@ def register_standard_endpoint(router, model, viewset_cls=None):
 
     - model #django.db.models.Model: The model class to expose.
 
-    - viewset_cls #rest_framework.viewsets.GenericViewSet: The viewset to expose.
+    - viewset_cls #rest_framework.viewsets.GenericViewSet: The viewset to expose (optional).
 
-        Optional hence if omitted the 'standard' viewset class will be used.
+        If omitted the 'standard' viewset class will be used.
 
         See also #drf_shortcuts.views.create_standard_viewset_class.
     """

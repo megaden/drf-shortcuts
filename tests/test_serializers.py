@@ -20,17 +20,6 @@ class GenerateDetailViewNameTests(TestCase):
         self.assertEqual('bar:foo-detail', generate_detail_view_name('foo'))
 
 
-class RenameSerializerFieldTests(TestCase):
-    def test_moves_field_under_new_name(self):
-        serializer = Serializer()
-        field = CharField()
-        serializer.fields['foo'] = field
-        rename_serializer_field(serializer, 'foo', 'bar')
-        with self.assertRaises(KeyError):
-            _ = serializer.fields['foo']
-        self.assertEqual(field, serializer.fields['bar'])
-
-
 class GetEntityPkTests(TestCase):
     def test_throws_for_none_serializer(self):
         with self.assertRaises(AttributeError) as excCtx:
@@ -59,6 +48,18 @@ class ModelStub:
         self.foo = value
 
 
+class GetOptionalFieldValueTests(TestCase):
+    def test_returns_value_from_data_if_present(self):
+        self.assertEqual(1, get_optional_field_value({'foo': 1}, 'foo', None, None))
+
+    def test_returns_none_if_pk_not_available(self):
+        self.assertIsNone(get_optional_field_value({}, 'foo', None, None))
+
+    def test_returns_value_from_model_if_available(self):
+        value = get_optional_field_value({}, 'foo', 'bar', lambda x: ModelStub('baz') if x == 'bar' else None)
+        self.assertEqual('baz', value)
+
+
 class GetRequiredFieldValueTests(TestCase):
     def test_returns_value_from_data_if_present(self):
         self.assertEqual(1, get_required_field_value({'foo': 1}, 'foo', None, None))
@@ -78,16 +79,15 @@ class GetRequiredFieldValueTests(TestCase):
         self.assertEqual('baz', value)
 
 
-class GetOptionalFieldValueTests(TestCase):
-    def test_returns_value_from_data_if_present(self):
-        self.assertEqual(1, get_optional_field_value({'foo': 1}, 'foo', None, None))
-
-    def test_returns_none_if_pk_not_available(self):
-        self.assertIsNone(get_optional_field_value({}, 'foo', None, None))
-
-    def test_returns_value_from_model_if_available(self):
-        value = get_optional_field_value({}, 'foo', 'bar', lambda x: ModelStub('baz') if x == 'bar' else None)
-        self.assertEqual('baz', value)
+class RenameSerializerFieldTests(TestCase):
+    def test_moves_field_under_new_name(self):
+        serializer = Serializer()
+        field = CharField()
+        serializer.fields['foo'] = field
+        rename_serializer_field(serializer, 'foo', 'bar')
+        with self.assertRaises(KeyError):
+            _ = serializer.fields['foo']
+        self.assertEqual(field, serializer.fields['bar'])
 
 
 class SerializerWithUrlFields(OptimizeUrlFieldsSerializer):

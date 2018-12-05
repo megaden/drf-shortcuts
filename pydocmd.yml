@@ -3,6 +3,8 @@ site_name: DRF Shortcuts
 generate:
   - generated/drf_shortcuts.md:
     - drf_shortcuts
+  - generated/drf_shortcuts-serializers.md:
+    - drf_shortcuts.serializers++
   - generated/drf_shortcuts-urls.md:
     - drf_shortcuts.urls++
 
@@ -13,6 +15,7 @@ pages:
   - Examples: examples.md
 - API Reference:
   - package: generated/drf_shortcuts.md
+  - serializers module: generated/drf_shortcuts-serializers.md
   - urls module: generated/drf_shortcuts-urls.md
   - rest of the package: tbc.md
 
