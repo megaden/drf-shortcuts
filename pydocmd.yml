@@ -7,6 +7,8 @@ generate:
     - drf_shortcuts.serializers++
   - generated/drf_shortcuts-urls.md:
     - drf_shortcuts.urls++
+  - generated/drf_shortcuts-views.md:
+    - drf_shortcuts.views++
 
 pages:
 - Home:
@@ -17,7 +19,7 @@ pages:
   - package: generated/drf_shortcuts.md
   - serializers module: generated/drf_shortcuts-serializers.md
   - urls module: generated/drf_shortcuts-urls.md
-  - rest of the package: tbc.md
+  - views module: generated/drf_shortcuts-views.md
 
 docs_dir: docs
 theme: readthedocs

@@ -1,3 +1,23 @@
+# -*- coding: utf-8 -*-
+"""views module of DRF (Django REST Framework) shortcuts package.
+
+Functions:
+
+- #append_pagination_info_to_docstring: TBD.
+
+- #append_search_info_to_docstring: TBD.
+
+- #append_ordering_info_to_docstring: TBD.
+
+- #append_search_ordering_and_pagination_info_to_docstring: TBD.
+
+- #get_fields_suitable_for_ordering: TBD.
+
+- #get_fields_suitable_for_search: TBD.
+
+- #create_standard_viewset_class: TBD.
+"""
+
 from rest_framework.settings import api_settings
 from rest_framework import viewsets
 from django.db.models import TextField, CharField
