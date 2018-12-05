@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>serializers module - DRF Shortcuts</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "serializers module";
+    var mkdocs_page_input_path = "generated/drf_shortcuts-serializers.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> DRF Shortcuts</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Home</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../..">Overview</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../setup/">Requirements & Installation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../examples/">Examples</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Reference</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../drf_shortcuts/">package</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">serializers module</a>
+    <ul class="subnav">
+            
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../drf_shortcuts-urls/">urls module</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../drf_shortcuts-views/">views module</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">DRF Shortcuts</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>API Reference &raquo;</li>
+        
+      
+    
+    <li>serializers module</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="drf_shortcuts.serializers">drf_shortcuts.serializers</h1>
+
+<p>serializers module of DRF (Django REST Framework) shortcuts package.</p>
+<p>Functions:</p>
+<ul>
+<li>
+<p><code>generate_detail_view_name</code>: Generates detail view name for a viewset which DRF uses to expose it.</p>
+</li>
+<li>
+<p><code>generate_serializer_base_name</code>: Generates base name to be used in viewset routing via DRF router further on.</p>
+</li>
+<li>
+<p><code>get_entity_pk</code>: Gets the primary key (PK) of an entity associated with the serializer provided.</p>
+</li>
+<li>
+<p><code>get_optional_field_value</code>: Gets the value of a model field if it exists either in serializer data or in the database.</p>
+</li>
+<li>
+<p><code>get_required_field_value</code>: Gets the value of a model field either from serializer data or from the database.</p>
+</li>
+<li>
+<p><code>rename_serializer_field</code>: Renames specified field of a serializer optionally updating its label.</p>
+</li>
+<li>
+<p><code>create_standard_serializer_class</code>: Creates serializer class for the Django model specified.</p>
+</li>
+</ul>
+<p>Classses:</p>
+<ul>
+<li>
+<p><code>JsFriendlyFieldsRenamingSerializer</code>: Renames serializer fields from snake_case into Javascript-friendly PascalCase.</p>
+</li>
+<li>
+<p><code>OptimizeUrlFieldsSerializer</code>: Removes serializer fields producing URLs from output reducing resulting output size.</p>
+</li>
+<li>
+<p><code>UpdateEditorSerializer</code>: Automatically updates serializer data with request.user if there is any in case of update.</p>
+</li>
+<li>
+<p><code>InsertAuthorSerializer</code>: Automatically adds request.user to serializer data if there is any in case of creation.</p>
+</li>
+</ul>
+<h2 id="drf_shortcuts.serializers.generate_detail_view_name">generate_detail_view_name</h2>
+
+<pre><code class="python">generate_detail_view_name(base_name)
+</code></pre>
+
+<p>Generates detail view name for a viewset which DRF will use to expose it via router.
+Detail view is used to process requests against individual entities rather than lists.
+DRF registers base_name + '-detail' by default as detail view name.</p>
+<p>Takes API_URL_NAMESPACE setting into account if set,
+i.e. if API_URL_NAMESPACE is 'foo' and base name is 'bar' then detail view full name would be 'foo:bar-detail'.</p>
+<p>The intended usage is to provide HyperlinkedRelatedFields with proper view name to resolve.</p>
+<p>Parameters:</p>
+<ul>
+<li>base_name <code>str</code>: The base name of a viewset to.</li>
+</ul>
+<p>Returns: the detail view name.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://www.django-rest-framework.org/api-guide/routers/#usage">Usage of routers in DRF</a></li>
+<li><code>generate_serializer_base_name</code></li>
+<li><code>rest_framework.relations.HyperlinkedRelatedField</code></li>
+</ul>
+<h2 id="drf_shortcuts.serializers.generate_serializer_base_name">generate_serializer_base_name</h2>
+
+<pre><code class="python">generate_serializer_base_name(model_cls)
+</code></pre>
+
+<p>Generates base name to be used when a viewset is exposed via DRF router further on.
+Attaching a base name to the serializer streamlines routing to detail views from related fields.</p>
+<p>By convention standard serializers created by DRF shortcuts package have DEFAULT_BASE_NAME class attribute,
+which captures this function result against serializer model class for further usage.</p>
+<p>Parameters:</p>
+<ul>
+<li>model_cls <code>django.db.models.Model</code>: The Model class serializer works with.</li>
+</ul>
+<p>Returns: the base name.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://www.django-rest-framework.org/api-guide/routers/#usage">Usage of routers in DRF</a></li>
+<li><code>generate_detail_view_name</code></li>
+</ul>
+<h2 id="drf_shortcuts.serializers.get_entity_pk">get_entity_pk</h2>
+
+<pre><code class="python">get_entity_pk(serializer)
+</code></pre>
+
+<p>Gets the primary key (PK) of an entity associated with the serializer provided.
+Looks up serializer context for associated view data.</p>
+<p>Parameters:</p>
+<ul>
+<li>serializer <code>rest_framework.serializers.BaseSerializer</code>: The serializer instance to use for PK lookup.</li>
+</ul>
+<p>Returns: the PK of the entity if present else None.</p>
+<h2 id="drf_shortcuts.serializers.get_optional_field_value">get_optional_field_value</h2>
+
+<pre><code class="python">get_optional_field_value(data, field_name, pk, fetch_model)
+</code></pre>
+
+<p>Gets the value of a model field if it exists either in serializer data or in the database.
+"Optional" means it's not an issue if the field value is missing / None.</p>
+<p>If there's no field in data, then model if fetched via function provided and looked up instead.
+Field can be missing in data in case of partial update (PATCH) or in case action allows that some other way.</p>
+<p>Parameters:</p>
+<ul>
+<li>data <code>dict</code>: The serializer's data to look up the field in first.</li>
+<li>field_name <code>str</code>: The name of the field to look up.</li>
+<li>pk <code>object</code>: The value of corresponding entity's PK to fetch model in case there's no field in data.</li>
+<li>fetch_model <code>function</code>: A function which is expected to return model instance if executed with its PK as argument.</li>
+</ul>
+<p>Returns: the value of the field if present else None.</p>
+<h2 id="drf_shortcuts.serializers.get_required_field_value">get_required_field_value</h2>
+
+<pre><code class="python">get_required_field_value(data, field_name, pk, fetch_model)
+</code></pre>
+
+<p>Gets the value of a model field either from serializer data or from the database.
+"Required" means it's an issue if the field value is missing / None hence function will fail in such case.</p>
+<p>If there's no field in data, then model if fetched via function provided and looked up instead.
+Field can be missing in data in case of partial update (PATCH) or in case action allows that some other way.</p>
+<p>Parameters:</p>
+<ul>
+<li>data <code>dict</code>: The serializer's data to look up the field in first.</li>
+<li>field_name <code>str</code>: The name of the field to look up.</li>
+<li>pk <code>object</code>: The value of corresponding entity's PK to fetch model in case there's no field in data.</li>
+<li>fetch_model <code>function</code>: A function which is expected to return model instance if executed with its PK as argument.</li>
+</ul>
+<p>Returns: the value of the field if present else None.</p>
+<h2 id="drf_shortcuts.serializers.rename_serializer_field">rename_serializer_field</h2>
+
+<pre><code class="python">rename_serializer_field(serializer, source_name, target_name, display_name=None)
+</code></pre>
+
+<p>Renames specified field of a serializer optionally updating its label.</p>
+<p>Useful to make field set of a serialized representation of an entity differ from the original one.</p>
+<p>Parameters:</p>
+<ul>
+<li>serializer <code>rest_framework.serializers.Serializer</code>: The serializer instance to rename field of.</li>
+<li>source_name <code>str</code>: The original name of the field.</li>
+<li>target_name <code>str</code>: The desired name of the field.</li>
+<li>display_name <code>str</code>: The updated label of the field (optional).</li>
+</ul>
+<p>See also:</p>
+<ul>
+<li><a href="https://www.django-rest-framework.org/api-guide/fields/#label">DRF Serializer Field Label</a></li>
+</ul>
+<h2 id="drf_shortcuts.serializers.JsFriendlyFieldsRenamingSerializer">JsFriendlyFieldsRenamingSerializer</h2>
+
+<pre><code class="python">JsFriendlyFieldsRenamingSerializer(self, instance=None, data=&lt;class 'rest_framework.fields.empty'&gt;, **kwargs)
+</code></pre>
+
+<p>Renames serializer fields from snake_case into Javascript-friendly PascalCase.</p>
+<p>Looks up field names in snake_case and replaces with PascalCase names leveraging rename_serializer_field &amp; RegExp.</p>
+<p>See also:</p>
+<ul>
+<li><code>rename_serializer_field</code></li>
+</ul>
+<h2 id="drf_shortcuts.serializers.OptimizeUrlFieldsSerializer">OptimizeUrlFieldsSerializer</h2>
+
+<pre><code class="python">OptimizeUrlFieldsSerializer(self, instance=None, data=&lt;class 'rest_framework.fields.empty'&gt;, **kwargs)
+</code></pre>
+
+<p>Removes serializer fields producing URLs from output reducing resulting output size.</p>
+<p>By default URL fields are removed for any Renderer except BrowsableAPIRenderer.
+HyperlinkedIdentityField, HyperlinkedRelatedField and any explicitly added fields are stripped out.
+Behavior can be overridden by "forceUrls" query parameter ("true" / "false").</p>
+<p>To explicitly add a field inheritors should set up _explicit_url_field_names class attribute.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://www.django-rest-framework.org/api-guide/renderers/">DRF Renderers</a></li>
+</ul>
+<h2 id="drf_shortcuts.serializers.UpdateEditorSerializer">UpdateEditorSerializer</h2>
+
+<pre><code class="python">UpdateEditorSerializer(self, instance=None, data=&lt;class 'rest_framework.fields.empty'&gt;, **kwargs)
+</code></pre>
+
+<p>Automatically updates serializer data with request.user if there is any in case of update.</p>
+<p>The intended usage is streamline update of "last modified by" kind of model fields.
+Only PUT &amp; PATCH methods trigger such behavior.</p>
+<p>Inheritors must either define "editor_field_name" or implement "set_editor_core" method.</p>
+<h2 id="drf_shortcuts.serializers.InsertAuthorSerializer">InsertAuthorSerializer</h2>
+
+<pre><code class="python">InsertAuthorSerializer(self, instance=None, data=&lt;class 'rest_framework.fields.empty'&gt;, **kwargs)
+</code></pre>
+
+<p>Automatically adds request.user to serializer data if there is any in case of creation.</p>
+<p>The intended usage is streamline update of "created by" kind of model fields.
+Only POST methods trigger such behavior.</p>
+<p>Inheritors must either define "author_field_name" or implement "set_author_core" method.</p>
+<h2 id="drf_shortcuts.serializers.create_standard_serializer_class">create_standard_serializer_class</h2>
+
+<pre><code class="python">create_standard_serializer_class(model_cls)
+</code></pre>
+
+<p>Creates serializer class for the Django model specified.</p>
+<p>Created serializer will declare all model fields,
+will have "url" HyperlinkedIdentityField pointing at detail view for the entity
+and will inherit OptimizeUrlFieldsSerializer and JsFriendlyFieldsRenamingSerializer behaviors.</p>
+<p>Parameters:</p>
+<ul>
+<li>model_cls <code>django.db.models.Model</code>: The Model class serializer should work with.</li>
+</ul>
+<p>Returns: the standardized serializer class for the model specified.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../drf_shortcuts-urls/" class="btn btn-neutral float-right" title="urls module">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../drf_shortcuts/" class="btn btn-neutral" title="package"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../drf_shortcuts/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../drf_shortcuts-urls/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>
