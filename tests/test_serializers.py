@@ -7,7 +7,7 @@ from rest_framework.request import Request
 
 from drf_shortcuts.serializers import (
     generate_detail_view_name, rename_serializer_field, get_entity_pk, get_required_field_value,
-    get_optional_field_value, OptimizeUrlFieldsSerializer, ValidateAndInsertAuthorSerializer
+    get_optional_field_value, OptimizeUrlFieldsSerializer, JsFriendlyFieldsRenamingSerializer
 )
 
 
@@ -41,7 +41,7 @@ class GetEntityPkTests(TestCase):
         self.assertEqual('foo', get_entity_pk(serializer))
 
 
-class ModelStub:
+class _ModelStub:
     foo = None
 
     def __init__(self, value=None):
@@ -56,7 +56,7 @@ class GetOptionalFieldValueTests(TestCase):
         self.assertIsNone(get_optional_field_value({}, 'foo', None, None))
 
     def test_returns_value_from_model_if_available(self):
-        value = get_optional_field_value({}, 'foo', 'bar', lambda x: ModelStub('baz') if x == 'bar' else None)
+        value = get_optional_field_value({}, 'foo', 'bar', lambda x: _ModelStub('baz') if x == 'bar' else None)
         self.assertEqual('baz', value)
 
 
@@ -71,11 +71,11 @@ class GetRequiredFieldValueTests(TestCase):
 
     def test_throws_if_required_field_value_is_missing(self):
         with self.assertRaises(AssertionError) as excCtx:
-            get_required_field_value({}, 'foo', 'bar', lambda x: ModelStub() if x == 'bar' else None)
+            get_required_field_value({}, 'foo', 'bar', lambda x: _ModelStub() if x == 'bar' else None)
         self.assertTrue('required field value' in str(excCtx.exception))
 
     def test_returns_value_from_model_if_available(self):
-        value = get_required_field_value({}, 'foo', 'bar', lambda x: ModelStub('baz') if x == 'bar' else None)
+        value = get_required_field_value({}, 'foo', 'bar', lambda x: _ModelStub('baz') if x == 'bar' else None)
         self.assertEqual('baz', value)
 
 
@@ -90,7 +90,7 @@ class RenameSerializerFieldTests(TestCase):
         self.assertEqual(field, serializer.fields['bar'])
 
 
-class SerializerWithUrlFields(OptimizeUrlFieldsSerializer):
+class _SerializerWithUrlFields(OptimizeUrlFieldsSerializer):
     id_field = HyperlinkedIdentityField('foo')
     related_field = HyperlinkedRelatedField('foo', read_only=True)
     regular_field = CharField()
@@ -98,40 +98,53 @@ class SerializerWithUrlFields(OptimizeUrlFieldsSerializer):
 
 class OptimizeUrlFieldsSerializerTests(TestCase):
     def test_removes_url_fields_by_default(self):
-        serializer = SerializerWithUrlFields()
+        serializer = _SerializerWithUrlFields()
         self.assertEqual(1, len(serializer.fields))
 
     def test_keeps_url_fields_if_query_param_is_set_to_true(self):
         django_request = HttpRequest()
         django_request.GET['forceUrls'] = 'true'
-        serializer = SerializerWithUrlFields(context={'request': Request(django_request)})
+        serializer = _SerializerWithUrlFields(context={'request': Request(django_request)})
         self.assertEqual(3, len(serializer.fields))
 
     def test_removes_url_fields_if_query_param_is_set_to_false(self):
         django_request = HttpRequest()
         django_request.GET['forceUrls'] = 'false'
-        serializer = SerializerWithUrlFields(context={'request': Request(django_request)})
+        serializer = _SerializerWithUrlFields(context={'request': Request(django_request)})
         self.assertEqual(1, len(serializer.fields))
 
     def test_keeps_url_fields_if_accepted_renderer_is_browsable_api(self):
         drf_request = Request(HttpRequest())
         drf_request.accepted_renderer = BrowsableAPIRenderer()
-        serializer = SerializerWithUrlFields(context={'request': drf_request})
+        serializer = _SerializerWithUrlFields(context={'request': drf_request})
         self.assertEqual(3, len(serializer.fields))
 
     def test_removes_url_fields_if_accepted_renderer_is_not_browsable_api(self):
         drf_request = Request(HttpRequest())
         drf_request.accepted_renderer = JSONRenderer()
-        serializer = SerializerWithUrlFields(context={'request': drf_request})
+        serializer = _SerializerWithUrlFields(context={'request': drf_request})
         self.assertEqual(1, len(serializer.fields))
 
     def test_removes_field_specified_explicitly(self):
-        class SerializerWithExplicitFields(SerializerWithUrlFields):
+        class SerializerWithExplicitFields(_SerializerWithUrlFields):
             _explicit_url_field_names = ['regular_field']
 
         serializer = SerializerWithExplicitFields()
         self.assertEqual(0, len(serializer.fields))
 
 
-class ValidateAndInsertAuthorSerializerTests(TestCase):
-    pass
+class JsFriendlyFieldsRenamingSerializerTests(TestCase):
+    def test_keeps_fields_without_underscores_as_is(self):
+        class SerializerWithFieldsToRename(JsFriendlyFieldsRenamingSerializer):
+            simple = CharField()
+
+        serializer = SerializerWithFieldsToRename()
+        self.assertTrue('simple' in serializer.fields)
+
+    def test_renames_fields_with_underscores(self):
+        class SerializerWithFieldsToRename(JsFriendlyFieldsRenamingSerializer):
+            with_underscore = CharField()
+
+        serializer = SerializerWithFieldsToRename()
+        self.assertTrue('with_underscore' not in serializer.fields)
+        self.assertTrue('withUnderscore' in serializer.fields)
