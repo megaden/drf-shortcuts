@@ -19,13 +19,13 @@ Functions:
 
 Classses:
 
-- #JsFriendlyFieldsRenamingSerializer: TBD.
+- #JsFriendlyFieldsRenamingSerializer: Renames serializer fields from snake_case into Javascript-friendly PascalCase.
 
-- #OptimizeUrlFieldsSerializer: TBD.
+- #OptimizeUrlFieldsSerializer: Removes serializer fields producing URLs from output reducing resulting output size.
 
-- #UpdateEditorSerializer: TBD.
+- #UpdateEditorSerializer: Automatically updates serializer data with request.user if there is any in case of update.
 
-- #ValidateAndInsertAuthorSerializer: TBD.
+- #InsertAuthorSerializer: Automatically adds request.user to serializer data if there is any in case of creation.
 """
 
 from rest_framework import serializers
@@ -166,22 +166,41 @@ def rename_serializer_field(serializer, source_name, target_name, display_name=N
     serializer.fields[target_name] = field
 
 
-class JsFriendlyFieldsRenamingSerializer(serializers.ModelSerializer):
-    regex = re.compile('_(.)')
+# noinspection PyAbstractClass
+class JsFriendlyFieldsRenamingSerializer(serializers.Serializer):
+    """Renames serializer fields from snake_case into Javascript-friendly PascalCase.
+
+    Looks up field names in snake_case and replaces with PascalCase names leveraging rename_serializer_field & RegExp.
+
+    See also:
+
+    - #rename_serializer_field
+    """
+
+    _regex = re.compile('_(.)')
 
     def __init__(self, instance=None, data=empty, **kwargs):
         super().__init__(instance, data, **kwargs)
         for field_name in [f for f in self.fields if '_' in f]:
-            rename_serializer_field(self, field_name, self.regex.sub(self._process_match, field_name))
-
-    @staticmethod
-    def _process_match(match):
-        return match.group(1).upper()
+            rename_serializer_field(self, field_name, self._regex.sub(lambda m: m.group(1).upper(), field_name))
 
 
 # noinspection PyAbstractClass
 class OptimizeUrlFieldsSerializer(serializers.Serializer):
-    explicit_url_field_names = []
+    """Removes serializer fields producing URLs from output reducing resulting output size.
+
+    By default URL fields are removed for any Renderer except BrowsableAPIRenderer.
+    HyperlinkedIdentityField, HyperlinkedRelatedField and any explicitly added fields are stripped out.
+    Behavior can be overridden by "forceUrls" query parameter ("true" / "false").
+
+    To explicitly add a field inheritors should set up _explicit_url_field_names class attribute.
+
+    See also:
+
+    - [DRF Renderers](https://www.django-rest-framework.org/api-guide/renderers/)
+    """
+
+    _explicit_url_field_names = []
 
     def __init__(self, instance=None, data=empty, **kwargs):
         super().__init__(instance, data, **kwargs)
@@ -197,20 +216,34 @@ class OptimizeUrlFieldsSerializer(serializers.Serializer):
             for field_name in self.fields.keys():
                 is_id_field = isinstance(self.fields[field_name], serializers.HyperlinkedIdentityField)
                 is_related_field = isinstance(self.fields[field_name], serializers.HyperlinkedRelatedField)
-                is_explicit_field = field_name in self.explicit_url_field_names
+                is_explicit_field = field_name in self._explicit_url_field_names
                 if is_id_field or is_related_field or is_explicit_field:
                     field_names_to_remove.append(field_name)
             for field_name in field_names_to_remove:
                 del self.fields[field_name]
 
 
-class UpdateEditorSerializer(serializers.ModelSerializer):
+# noinspection PyAbstractClass
+class UpdateEditorSerializer(serializers.BaseSerializer):
+    """Automatically updates serializer data with request.user if there is any in case of update.
+
+    The intended usage is streamline update of "last modified by" kind of model fields.
+    Only PUT & PATCH methods trigger such behavior.
+
+    Inheritors must either define "editor_field_name" or implement "set_editor_core" method.
+    """
+
+    editor_field_name = None
+
     def to_internal_value(self, data):
         result = super().to_internal_value(data)
         in_request_context = self.context is not None and 'request' in self.context
         request = self.context['request'] if in_request_context else None
         if in_request_context and request.method in ('PUT', 'PATCH') and request.user:
-            self.set_editor_core(result, request.user)
+            if self.editor_field_name:
+                result[self.editor_field_name] = request.user
+            else:
+                self.set_editor_core(result, request.user)
         return result
 
     def set_editor_core(self, data, editor):
@@ -218,42 +251,27 @@ class UpdateEditorSerializer(serializers.ModelSerializer):
 
 
 # noinspection PyAbstractClass
-# TODO: Deprecate & replace with InsertAuthorSerializer.
-#       Author check should be permission-based instead.
-class ValidateAndInsertAuthorSerializer(serializers.Serializer):
+class InsertAuthorSerializer(serializers.BaseSerializer):
+    """Automatically adds request.user to serializer data if there is any in case of creation.
+
+    The intended usage is streamline update of "created by" kind of model fields.
+    Only POST methods trigger such behavior.
+
+    Inheritors must either define "author_field_name" or implement "set_author_core" method.
+    """
+
     author_field_name = None
-
-    _author_inserted = False
-
-    def validate(self, data):
-        author = self._get_author(data)
-        if author is not None and not self._author_inserted:
-            user = self.context['request'].user
-            if user != author:
-                raise serializers.ValidationError('Authoring for another user is not allowed')
-        return data
 
     def to_internal_value(self, data):
         result = super().to_internal_value(data)
-        if self.context is not None and 'request' in self.context and self.context['request'].method == 'POST':
-            author = self._get_author(result)
-            if author is None and self.context.get('request') is not None:
-                user = self.context['request'].user
-                if self.author_field_name:
-                    result[self.author_field_name] = user
-                else:
-                    self.set_author_core(result, user)
-                self._author_inserted = True
+        in_request_context = self.context is not None and 'request' in self.context
+        request = self.context['request'] if in_request_context else None
+        if in_request_context and request.method == 'POST' and request.user:
+            if self.author_field_name:
+                result[self.author_field_name] = request.user
+            else:
+                self.set_author_core(result, request.user)
         return result
-
-    def _get_author(self, data):
-        if self.author_field_name:
-            return data.get(self.author_field_name)
-        else:
-            return self.get_author_core(data)
-
-    def get_author_core(self, data):
-        raise NotImplementedError("This should be implemented")
 
     def set_author_core(self, data, author):
         raise NotImplementedError("This should be implemented")
@@ -274,7 +292,7 @@ def create_standard_serializer_class(model_cls):
     """
     base_name = generate_serializer_base_name(model_cls)
 
-    class Serializer(OptimizeUrlFieldsSerializer, JsFriendlyFieldsRenamingSerializer):
+    class Serializer(serializers.ModelSerializer, OptimizeUrlFieldsSerializer, JsFriendlyFieldsRenamingSerializer):
         DEFAULT_BASE_NAME = base_name
 
         url = serializers.HyperlinkedIdentityField(view_name=generate_detail_view_name(DEFAULT_BASE_NAME))

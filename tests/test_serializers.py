@@ -127,7 +127,7 @@ class OptimizeUrlFieldsSerializerTests(TestCase):
 
     def test_removes_field_specified_explicitly(self):
         class SerializerWithExplicitFields(SerializerWithUrlFields):
-            explicit_url_field_names = ['regular_field']
+            _explicit_url_field_names = ['regular_field']
 
         serializer = SerializerWithExplicitFields()
         self.assertEqual(0, len(serializer.fields))
