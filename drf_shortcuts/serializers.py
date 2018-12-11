@@ -41,10 +41,10 @@ def generate_detail_view_name(base_name):
     Detail view is used to process requests against individual entities rather than lists.
     DRF registers base_name + '-detail' by default as detail view name.
 
-    Takes API_URL_NAMESPACE setting into account if set,
-    i.e. if API_URL_NAMESPACE is 'foo' and base name is 'bar' then detail view full name would be 'foo:bar-detail'.
+    Takes #API_URL_NAMESPACE setting into account if set,
+    i.e. if #API_URL_NAMESPACE is 'foo' and base name is 'bar' then detail view full name would be 'foo:bar-detail'.
 
-    The intended usage is to provide HyperlinkedRelatedFields with proper view name to resolve.
+    The intended usage is to provide #HyperlinkedRelatedFields with proper view name to resolve.
 
     Parameters:
 
@@ -68,12 +68,12 @@ def generate_serializer_base_name(model_cls):
     """Generates base name to be used when a viewset is exposed via DRF router further on.
     Attaching a base name to the serializer streamlines routing to detail views from related fields.
 
-    By convention standard serializers created by DRF shortcuts package have DEFAULT_BASE_NAME class attribute,
+    By convention standard serializers created by DRF shortcuts package have #DEFAULT_BASE_NAME class attribute,
     which captures this function result against serializer model class for further usage.
 
     Parameters:
 
-    - model_cls #django.db.models.Model: The Model class serializer works with.
+    - model_cls #django.db.models.base.ModelBase: The Model class serializer works with.
 
     Returns: the base name.
 
@@ -93,7 +93,7 @@ def get_entity_pk(serializer):
 
     - serializer #rest_framework.serializers.BaseSerializer: The serializer instance to use for PK lookup.
 
-    Returns: the PK of the entity if present else None.
+    Returns: the PK of the entity if present else #None.
     """
     view_kwargs = serializer.context['view'].kwargs if 'view' in serializer.context else {}
     return view_kwargs.get('pk') if 'pk' in view_kwargs else None
@@ -101,7 +101,7 @@ def get_entity_pk(serializer):
 
 def get_optional_field_value(data, field_name, pk, fetch_model):
     """Gets the value of a model field if it exists either in serializer data or in the database.
-    "Optional" means it's not an issue if the field value is missing / None.
+    "Optional" means it's not an issue if the field value is not present.
 
     If there's no field in data, then model if fetched via function provided and looked up instead.
     Field can be missing in data in case of partial update (PATCH) or in case action allows that some other way.
@@ -113,7 +113,7 @@ def get_optional_field_value(data, field_name, pk, fetch_model):
     - pk #object: The value of corresponding entity's PK to fetch model in case there's no field in data.
     - fetch_model #function: A function which is expected to return model instance if executed with its PK as argument.
 
-    Returns: the value of the field if present else None.
+    Returns: the value of the field if present else #None.
     """
     if field_name in data:
         return data.get(field_name)
@@ -122,7 +122,7 @@ def get_optional_field_value(data, field_name, pk, fetch_model):
 
 def get_required_field_value(data, field_name, pk, fetch_model):
     """Gets the value of a model field either from serializer data or from the database.
-    "Required" means it's an issue if the field value is missing / None hence function will fail in such case.
+    "Required" means it's an issue if the field value is not present hence function will fail in such case.
 
     If there's no field in data, then model if fetched via function provided and looked up instead.
     Field can be missing in data in case of partial update (PATCH) or in case action allows that some other way.
@@ -134,7 +134,7 @@ def get_required_field_value(data, field_name, pk, fetch_model):
     - pk #object: The value of corresponding entity's PK to fetch model in case there's no field in data.
     - fetch_model #function: A function which is expected to return model instance if executed with its PK as argument.
 
-    Returns: the value of the field if present else None.
+    Returns: the value of the field if present else #None.
     """
     if field_name in data:
         return data.get(field_name)
@@ -193,14 +193,14 @@ class OptimizeUrlFieldsSerializer(serializers.Serializer):
     HyperlinkedIdentityField, HyperlinkedRelatedField and any explicitly added fields are stripped out.
     Behavior can be overridden by "forceUrls" query parameter ("true" / "false").
 
-    To explicitly add a field inheritors should set up _explicit_url_field_names class attribute.
+    To explicitly add a field inheritors should set up #explicit_url_field_names class attribute.
 
     See also:
 
     - [DRF Renderers](https://www.django-rest-framework.org/api-guide/renderers/)
     """
 
-    _explicit_url_field_names = []
+    explicit_url_field_names = []
 
     def __init__(self, instance=None, data=empty, **kwargs):
         super().__init__(instance, data, **kwargs)
@@ -216,7 +216,7 @@ class OptimizeUrlFieldsSerializer(serializers.Serializer):
             for field_name in self.fields.keys():
                 is_id_field = isinstance(self.fields[field_name], serializers.HyperlinkedIdentityField)
                 is_related_field = isinstance(self.fields[field_name], serializers.HyperlinkedRelatedField)
-                is_explicit_field = field_name in self._explicit_url_field_names
+                is_explicit_field = field_name in self.explicit_url_field_names
                 if is_id_field or is_related_field or is_explicit_field:
                     field_names_to_remove.append(field_name)
             for field_name in field_names_to_remove:
@@ -230,7 +230,7 @@ class UpdateEditorSerializer(serializers.BaseSerializer):
     The intended usage is streamline update of "last modified by" kind of model fields.
     Only PUT & PATCH methods trigger such behavior.
 
-    Inheritors must either define "editor_field_name" or implement "set_editor_core" method.
+    Inheritors must either define #editor_field_name or implement #set_editor_core method.
     """
 
     editor_field_name = None
@@ -257,7 +257,7 @@ class InsertAuthorSerializer(serializers.BaseSerializer):
     The intended usage is streamline update of "created by" kind of model fields.
     Only POST methods trigger such behavior.
 
-    Inheritors must either define "author_field_name" or implement "set_author_core" method.
+    Inheritors must either define #author_field_name or implement #set_author_core method.
     """
 
     author_field_name = None
@@ -281,12 +281,12 @@ def create_standard_serializer_class(model_cls):
     """Creates serializer class for the Django model specified.
 
     Created serializer will declare all model fields,
-    will have "url" HyperlinkedIdentityField pointing at detail view for the entity
-    and will inherit OptimizeUrlFieldsSerializer and JsFriendlyFieldsRenamingSerializer behaviors.
+    will have "url" #HyperlinkedIdentityField pointing at detail view for the entity
+    and will inherit #OptimizeUrlFieldsSerializer and #JsFriendlyFieldsRenamingSerializer behaviors.
 
     Parameters:
 
-    - model_cls #django.db.models.Model: The Model class serializer should work with.
+    - model_cls #django.db.models.base.ModelBase: The Model class serializer should work with.
 
     Returns: the standardized serializer class for the model specified.
     """

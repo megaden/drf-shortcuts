@@ -3,19 +3,22 @@
 
 Functions:
 
-- #append_pagination_info_to_docstring: TBD.
+- #append_pagination_info_to_docstring: Class decorator for viewsets which adds documentation on pagination.
 
-- #append_search_info_to_docstring: TBD.
+- #append_search_info_to_docstring: Class decorator for viewsets which adds documentation on search filtering.
 
-- #append_ordering_info_to_docstring: TBD.
+- #append_ordering_info_to_docstring: Class decorator factory which creates viewset decorator adding documentation on
+ordering of viewset results.
 
-- #append_search_ordering_and_pagination_info_to_docstring: TBD.
+- #append_search_ordering_and_pagination_info_to_docstring: Class decorator factory which creates viewset decorator
+combining other documenting decorators.
 
-- #get_fields_suitable_for_ordering: TBD.
+- #get_fields_suitable_for_ordering: Gets field names of a model specified which are suitable for ordering viewset
+results.
 
-- #get_fields_suitable_for_search: TBD.
+- #get_fields_suitable_for_search: Gets field names of a model specified which are suitable for search viewset results.
 
-- #create_standard_viewset_class: TBD.
+- #create_standard_viewset_class: Creates viewset class for the Django model specified.
 """
 
 from rest_framework.settings import api_settings
@@ -28,6 +31,10 @@ from drf_shortcuts.serializers import create_standard_serializer_class
 
 
 def append_pagination_info_to_docstring(cls):
+    """Class decorator for viewsets which adds documentation on pagination.
+
+    Documentation is displayed either via Browseable API or upon receiving OPTIONS request.
+    """
     if cls.__doc__ is not None:
         cls.__doc__ = '{}\n' \
                       'Specify "?page=<page number>" to get particular page. ' \
@@ -36,6 +43,10 @@ def append_pagination_info_to_docstring(cls):
 
 
 def append_search_info_to_docstring(cls):
+    """Class decorator for viewsets which adds documentation on search filtering.
+
+    Documentation is displayed either via Browseable API or upon receiving OPTIONS request.
+    """
     if cls.__doc__ is not None:
         cls.__doc__ = '{}\n' \
                       'Specify "?search=<search terms here>" query parameter to search items.\n' \
@@ -44,6 +55,14 @@ def append_search_info_to_docstring(cls):
 
 
 def append_ordering_info_to_docstring(fields):
+    """Class decorator factory which creates viewset decorator adding documentation on ordering of viewset results.
+
+    Documentation is displayed either via Browseable API or upon receiving OPTIONS request.
+
+    Parameters:
+
+    - fields #list: The list of field names which are available for ordering.
+    """
     assert len(fields) > 0, "At least one ordering field is required"
 
     def _wrapped_append(cls):
@@ -63,6 +82,20 @@ def append_ordering_info_to_docstring(fields):
 
 
 def append_search_ordering_and_pagination_info_to_docstring(fields):
+    """Class decorator factory which creates viewset decorator combining other documenting decorators.
+
+    It's a shortcut for using the following decorators at once:
+
+    - #append_pagination_info_to_docstring
+    - #append_ordering_info_to_docstring
+    - #append_search_info_to_docstring
+
+    Documentation is displayed either via Browseable API or upon receiving OPTIONS request.
+
+    Parameters:
+
+    - fields #list: The list of field names which are available for ordering.
+    """
     def _wrapped_append(cls):
         return append_pagination_info_to_docstring(
             append_ordering_info_to_docstring(fields)(
@@ -72,15 +105,53 @@ def append_search_ordering_and_pagination_info_to_docstring(fields):
 
 
 def get_fields_suitable_for_ordering(model):
+    """Gets field names of a model specified which are suitable for ordering viewset results.
+
+    Parameters:
+
+    - model #django.db.models.base.ModelBase The model class to look up fields of.
+
+    Returns: the list of field names suitable for ordering.
+    """
     return [f.name for f in model._meta.get_fields()
             if not (isinstance(f, TextField) or isinstance(f, ForeignObjectRel))]
 
 
 def get_fields_suitable_for_search(model):
+    """Gets field names of a model specified which are suitable for search viewset results.
+
+    Parameters:
+
+    - model #django.db.models.base.ModelBase: The model class to look up fields of.
+
+    Returns: the list of field names suitable for search.
+    """
     return [f.name for f in model._meta.get_fields() if isinstance(f, CharField)]
 
 
 def create_standard_viewset_class(model_cls, serializer_cls=None):
+    """Creates viewset class for the Django model specified.
+
+    Created viewset will either use serializer specified or a standard one,
+    will have search & ordering fields specified, viewset's queryset will return all model objects ordered by PK
+    and all documentation decorators will be applied to the viewset.
+
+    Parameters:
+
+    - model_cls #django.db.models.base.ModelBase: The Model class viewset should expose.
+    - serializer_cls #type: The serializer class viewset should use (optional).
+
+        If omitted the 'standard' serializer class will be used.
+
+        See also #drf_shortcuts.serializers.create_standard_serializer_class.
+
+    Returns: the standardized viewset class for the model specified.
+
+    See also:
+
+    - #get_fields_suitable_for_ordering
+    - #get_fields_suitable_for_search
+    """
     fields = get_fields_suitable_for_ordering(model_cls)
 
     class ViewSet(viewsets.ModelViewSet):

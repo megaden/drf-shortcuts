@@ -38,7 +38,7 @@ Exposing a Django model:
     from my_fancy_app.models import MyModel
 
 
-    router = DefaultRouter(trailing_slash=False)
+    router = DefaultRouter()
 
     register_standard_endpoint(router, MyModel)
 

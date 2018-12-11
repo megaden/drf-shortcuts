@@ -22,7 +22,7 @@ def register_standard_endpoint(router, model, viewset_cls=None):
 
     - router #rest_framework.routers.BaseRouter: The instance of DRF router to add viewset to.
 
-    - model #django.db.models.Model: The model class to expose.
+    - model #django.db.models.base.ModelBase: The model class to expose.
 
     - viewset_cls #rest_framework.viewsets.GenericViewSet: The viewset to expose (optional).
 
