@@ -3,3 +3,4 @@ djangorestframework==3.8.2
 inflection==0.3.1
 tox==3.5.3
 pydoc-markdown==2.0.5
+twine==1.12.1
