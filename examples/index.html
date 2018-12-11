@@ -137,6 +137,9 @@
     <li>Examples</li>
     <li class="wy-breadcrumbs-aside">
       
+        <a href="https://github.com/megaden/drf-shortcuts/edit/master/docs/examples.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
     </li>
   </ul>
   <hr/>
@@ -154,7 +157,7 @@ from drf_shortcuts.urls import register_standard_endpoint
 from my_fancy_app.models import MyModel
 
 
-router = DefaultRouter(trailing_slash=False)
+router = DefaultRouter()
 
 register_standard_endpoint(router, MyModel)
 
@@ -230,6 +233,8 @@ class MyModelViewSet(ReadOnlyModelViewSet):
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/megaden/drf-shortcuts/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../setup/" style="color: #fcfcfc;">&laquo; Previous</a></span>

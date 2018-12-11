@@ -122,6 +122,9 @@
     <li>views module</li>
     <li class="wy-breadcrumbs-aside">
       
+        <a href="https://github.com/megaden/drf-shortcuts/edit/master/docs/generated/drf_shortcuts-views.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
     </li>
   </ul>
   <hr/>
@@ -135,26 +138,117 @@
 <p>Functions:</p>
 <ul>
 <li>
-<p><code>append_pagination_info_to_docstring</code>: TBD.</p>
+<p><code>append_pagination_info_to_docstring</code>: Class decorator for viewsets which adds documentation on pagination.</p>
 </li>
 <li>
-<p><code>append_search_info_to_docstring</code>: TBD.</p>
+<p><code>append_search_info_to_docstring</code>: Class decorator for viewsets which adds documentation on search filtering.</p>
 </li>
 <li>
-<p><code>append_ordering_info_to_docstring</code>: TBD.</p>
+<p><code>append_ordering_info_to_docstring</code>: Class decorator factory which creates viewset decorator adding documentation on
+ordering of viewset results.</p>
 </li>
 <li>
-<p><code>append_search_ordering_and_pagination_info_to_docstring</code>: TBD.</p>
+<p><code>append_search_ordering_and_pagination_info_to_docstring</code>: Class decorator factory which creates viewset decorator
+combining other documenting decorators.</p>
 </li>
 <li>
-<p><code>get_fields_suitable_for_ordering</code>: TBD.</p>
+<p><code>get_fields_suitable_for_ordering</code>: Gets field names of a model specified which are suitable for ordering viewset
+results.</p>
 </li>
 <li>
-<p><code>get_fields_suitable_for_search</code>: TBD.</p>
+<p><code>get_fields_suitable_for_search</code>: Gets field names of a model specified which are suitable for search viewset results.</p>
 </li>
 <li>
-<p><code>create_standard_viewset_class</code>: TBD.</p>
+<p><code>create_standard_viewset_class</code>: Creates viewset class for the Django model specified.</p>
 </li>
+</ul>
+<h2 id="drf_shortcuts.views.append_pagination_info_to_docstring">append_pagination_info_to_docstring</h2>
+
+<pre><code class="python">append_pagination_info_to_docstring(cls)
+</code></pre>
+
+<p>Class decorator for viewsets which adds documentation on pagination.</p>
+<p>Documentation is displayed either via Browseable API or upon receiving OPTIONS request.</p>
+<h2 id="drf_shortcuts.views.append_search_info_to_docstring">append_search_info_to_docstring</h2>
+
+<pre><code class="python">append_search_info_to_docstring(cls)
+</code></pre>
+
+<p>Class decorator for viewsets which adds documentation on search filtering.</p>
+<p>Documentation is displayed either via Browseable API or upon receiving OPTIONS request.</p>
+<h2 id="drf_shortcuts.views.append_ordering_info_to_docstring">append_ordering_info_to_docstring</h2>
+
+<pre><code class="python">append_ordering_info_to_docstring(fields)
+</code></pre>
+
+<p>Class decorator factory which creates viewset decorator adding documentation on ordering of viewset results.</p>
+<p>Documentation is displayed either via Browseable API or upon receiving OPTIONS request.</p>
+<p>Parameters:</p>
+<ul>
+<li>fields <code>list</code>: The list of field names which are available for ordering.</li>
+</ul>
+<h2 id="drf_shortcuts.views.append_search_ordering_and_pagination_info_to_docstring">append_search_ordering_and_pagination_info_to_docstring</h2>
+
+<pre><code class="python">append_search_ordering_and_pagination_info_to_docstring(fields)
+</code></pre>
+
+<p>Class decorator factory which creates viewset decorator combining other documenting decorators.</p>
+<p>It's a shortcut for using the following decorators at once:</p>
+<ul>
+<li><code>append_pagination_info_to_docstring</code></li>
+<li><code>append_ordering_info_to_docstring</code></li>
+<li><code>append_search_info_to_docstring</code></li>
+</ul>
+<p>Documentation is displayed either via Browseable API or upon receiving OPTIONS request.</p>
+<p>Parameters:</p>
+<ul>
+<li>fields <code>list</code>: The list of field names which are available for ordering.</li>
+</ul>
+<h2 id="drf_shortcuts.views.get_fields_suitable_for_ordering">get_fields_suitable_for_ordering</h2>
+
+<pre><code class="python">get_fields_suitable_for_ordering(model)
+</code></pre>
+
+<p>Gets field names of a model specified which are suitable for ordering viewset results.</p>
+<p>Parameters:</p>
+<ul>
+<li>model <code>django.db.models.base.ModelBase</code> The model class to look up fields of.</li>
+</ul>
+<p>Returns: the list of field names suitable for ordering.</p>
+<h2 id="drf_shortcuts.views.get_fields_suitable_for_search">get_fields_suitable_for_search</h2>
+
+<pre><code class="python">get_fields_suitable_for_search(model)
+</code></pre>
+
+<p>Gets field names of a model specified which are suitable for search viewset results.</p>
+<p>Parameters:</p>
+<ul>
+<li>model <code>django.db.models.base.ModelBase</code>: The model class to look up fields of.</li>
+</ul>
+<p>Returns: the list of field names suitable for search.</p>
+<h2 id="drf_shortcuts.views.create_standard_viewset_class">create_standard_viewset_class</h2>
+
+<pre><code class="python">create_standard_viewset_class(model_cls, serializer_cls=None)
+</code></pre>
+
+<p>Creates viewset class for the Django model specified.</p>
+<p>Created viewset will either use serializer specified or a standard one,
+will have search &amp; ordering fields specified, viewset's queryset will return all model objects ordered by PK
+and all documentation decorators will be applied to the viewset.</p>
+<p>Parameters:</p>
+<ul>
+<li>model_cls <code>django.db.models.base.ModelBase</code>: The Model class viewset should expose.</li>
+<li>
+<p>serializer_cls <code>type</code>: The serializer class viewset should use (optional).</p>
+<p>If omitted the 'standard' serializer class will be used.</p>
+<p>See also <code>drf_shortcuts.serializers.create_standard_serializer_class</code>.</p>
+</li>
+</ul>
+<p>Returns: the standardized viewset class for the model specified.</p>
+<p>See also:</p>
+<ul>
+<li><code>get_fields_suitable_for_ordering</code></li>
+<li><code>get_fields_suitable_for_search</code></li>
 </ul>
               
             </div>
@@ -188,6 +282,8 @@
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/megaden/drf-shortcuts/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../drf_shortcuts-urls/" style="color: #fcfcfc;">&laquo; Previous</a></span>

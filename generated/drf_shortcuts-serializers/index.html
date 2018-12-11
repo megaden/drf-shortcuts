@@ -122,6 +122,9 @@
     <li>serializers module</li>
     <li class="wy-breadcrumbs-aside">
       
+        <a href="https://github.com/megaden/drf-shortcuts/edit/master/docs/generated/drf_shortcuts-serializers.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
     </li>
   </ul>
   <hr/>
@@ -179,9 +182,9 @@
 <p>Generates detail view name for a viewset which DRF will use to expose it via router.
 Detail view is used to process requests against individual entities rather than lists.
 DRF registers base_name + '-detail' by default as detail view name.</p>
-<p>Takes API_URL_NAMESPACE setting into account if set,
-i.e. if API_URL_NAMESPACE is 'foo' and base name is 'bar' then detail view full name would be 'foo:bar-detail'.</p>
-<p>The intended usage is to provide HyperlinkedRelatedFields with proper view name to resolve.</p>
+<p>Takes <code>API_URL_NAMESPACE</code> setting into account if set,
+i.e. if <code>API_URL_NAMESPACE</code> is 'foo' and base name is 'bar' then detail view full name would be 'foo:bar-detail'.</p>
+<p>The intended usage is to provide <code>HyperlinkedRelatedFields</code> with proper view name to resolve.</p>
 <p>Parameters:</p>
 <ul>
 <li>base_name <code>str</code>: The base name of a viewset to.</li>
@@ -200,11 +203,11 @@ i.e. if API_URL_NAMESPACE is 'foo' and base name is 'bar' then detail view full 
 
 <p>Generates base name to be used when a viewset is exposed via DRF router further on.
 Attaching a base name to the serializer streamlines routing to detail views from related fields.</p>
-<p>By convention standard serializers created by DRF shortcuts package have DEFAULT_BASE_NAME class attribute,
+<p>By convention standard serializers created by DRF shortcuts package have <code>DEFAULT_BASE_NAME</code> class attribute,
 which captures this function result against serializer model class for further usage.</p>
 <p>Parameters:</p>
 <ul>
-<li>model_cls <code>django.db.models.Model</code>: The Model class serializer works with.</li>
+<li>model_cls <code>django.db.models.base.ModelBase</code>: The Model class serializer works with.</li>
 </ul>
 <p>Returns: the base name.</p>
 <p>See also:</p>
@@ -223,14 +226,14 @@ Looks up serializer context for associated view data.</p>
 <ul>
 <li>serializer <code>rest_framework.serializers.BaseSerializer</code>: The serializer instance to use for PK lookup.</li>
 </ul>
-<p>Returns: the PK of the entity if present else None.</p>
+<p>Returns: the PK of the entity if present else <code>None</code>.</p>
 <h2 id="drf_shortcuts.serializers.get_optional_field_value">get_optional_field_value</h2>
 
 <pre><code class="python">get_optional_field_value(data, field_name, pk, fetch_model)
 </code></pre>
 
 <p>Gets the value of a model field if it exists either in serializer data or in the database.
-"Optional" means it's not an issue if the field value is missing / None.</p>
+"Optional" means it's not an issue if the field value is not present.</p>
 <p>If there's no field in data, then model if fetched via function provided and looked up instead.
 Field can be missing in data in case of partial update (PATCH) or in case action allows that some other way.</p>
 <p>Parameters:</p>
@@ -240,14 +243,14 @@ Field can be missing in data in case of partial update (PATCH) or in case action
 <li>pk <code>object</code>: The value of corresponding entity's PK to fetch model in case there's no field in data.</li>
 <li>fetch_model <code>function</code>: A function which is expected to return model instance if executed with its PK as argument.</li>
 </ul>
-<p>Returns: the value of the field if present else None.</p>
+<p>Returns: the value of the field if present else <code>None</code>.</p>
 <h2 id="drf_shortcuts.serializers.get_required_field_value">get_required_field_value</h2>
 
 <pre><code class="python">get_required_field_value(data, field_name, pk, fetch_model)
 </code></pre>
 
 <p>Gets the value of a model field either from serializer data or from the database.
-"Required" means it's an issue if the field value is missing / None hence function will fail in such case.</p>
+"Required" means it's an issue if the field value is not present hence function will fail in such case.</p>
 <p>If there's no field in data, then model if fetched via function provided and looked up instead.
 Field can be missing in data in case of partial update (PATCH) or in case action allows that some other way.</p>
 <p>Parameters:</p>
@@ -257,7 +260,7 @@ Field can be missing in data in case of partial update (PATCH) or in case action
 <li>pk <code>object</code>: The value of corresponding entity's PK to fetch model in case there's no field in data.</li>
 <li>fetch_model <code>function</code>: A function which is expected to return model instance if executed with its PK as argument.</li>
 </ul>
-<p>Returns: the value of the field if present else None.</p>
+<p>Returns: the value of the field if present else <code>None</code>.</p>
 <h2 id="drf_shortcuts.serializers.rename_serializer_field">rename_serializer_field</h2>
 
 <pre><code class="python">rename_serializer_field(serializer, source_name, target_name, display_name=None)
@@ -296,20 +299,23 @@ Field can be missing in data in case of partial update (PATCH) or in case action
 <p>By default URL fields are removed for any Renderer except BrowsableAPIRenderer.
 HyperlinkedIdentityField, HyperlinkedRelatedField and any explicitly added fields are stripped out.
 Behavior can be overridden by "forceUrls" query parameter ("true" / "false").</p>
-<p>To explicitly add a field inheritors should set up _explicit_url_field_names class attribute.</p>
+<p>To explicitly add a field inheritors should set up <code>explicit_url_field_names</code> class attribute.</p>
 <p>See also:</p>
 <ul>
 <li><a href="https://www.django-rest-framework.org/api-guide/renderers/">DRF Renderers</a></li>
 </ul>
-<h2 id="drf_shortcuts.serializers.UpdateEditorSerializer">UpdateEditorSerializer</h2>
+<h3 id="drf_shortcuts.serializers.OptimizeUrlFieldsSerializer.explicit_url_field_names">explicit_url_field_names</h3>
 
+<p>list() -&gt; new empty list
+list(iterable) -&gt; new list initialized from iterable's items
+<h2 id="drf_shortcuts.serializers.UpdateEditorSerializer">UpdateEditorSerializer</h2></p>
 <pre><code class="python">UpdateEditorSerializer(self, instance=None, data=&lt;class 'rest_framework.fields.empty'&gt;, **kwargs)
 </code></pre>
 
 <p>Automatically updates serializer data with request.user if there is any in case of update.</p>
 <p>The intended usage is streamline update of "last modified by" kind of model fields.
 Only PUT &amp; PATCH methods trigger such behavior.</p>
-<p>Inheritors must either define "editor_field_name" or implement "set_editor_core" method.</p>
+<p>Inheritors must either define <code>editor_field_name</code> or implement <code>set_editor_core</code> method.</p>
 <h2 id="drf_shortcuts.serializers.InsertAuthorSerializer">InsertAuthorSerializer</h2>
 
 <pre><code class="python">InsertAuthorSerializer(self, instance=None, data=&lt;class 'rest_framework.fields.empty'&gt;, **kwargs)
@@ -318,7 +324,7 @@ Only PUT &amp; PATCH methods trigger such behavior.</p>
 <p>Automatically adds request.user to serializer data if there is any in case of creation.</p>
 <p>The intended usage is streamline update of "created by" kind of model fields.
 Only POST methods trigger such behavior.</p>
-<p>Inheritors must either define "author_field_name" or implement "set_author_core" method.</p>
+<p>Inheritors must either define <code>author_field_name</code> or implement <code>set_author_core</code> method.</p>
 <h2 id="drf_shortcuts.serializers.create_standard_serializer_class">create_standard_serializer_class</h2>
 
 <pre><code class="python">create_standard_serializer_class(model_cls)
@@ -326,11 +332,11 @@ Only POST methods trigger such behavior.</p>
 
 <p>Creates serializer class for the Django model specified.</p>
 <p>Created serializer will declare all model fields,
-will have "url" HyperlinkedIdentityField pointing at detail view for the entity
-and will inherit OptimizeUrlFieldsSerializer and JsFriendlyFieldsRenamingSerializer behaviors.</p>
+will have "url" <code>HyperlinkedIdentityField</code> pointing at detail view for the entity
+and will inherit <code>OptimizeUrlFieldsSerializer</code> and <code>JsFriendlyFieldsRenamingSerializer</code> behaviors.</p>
 <p>Parameters:</p>
 <ul>
-<li>model_cls <code>django.db.models.Model</code>: The Model class serializer should work with.</li>
+<li>model_cls <code>django.db.models.base.ModelBase</code>: The Model class serializer should work with.</li>
 </ul>
 <p>Returns: the standardized serializer class for the model specified.</p>
               
@@ -367,6 +373,8 @@ and will inherit OptimizeUrlFieldsSerializer and JsFriendlyFieldsRenamingSeriali
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/megaden/drf-shortcuts/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../drf_shortcuts/" style="color: #fcfcfc;">&laquo; Previous</a></span>
