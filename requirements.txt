@@ -1,5 +1,5 @@
 Django==2.0.9
-djangorestframework==3.8.2
+djangorestframework==3.9.1
 inflection==0.3.1
 tox==3.5.3
 pydoc-markdown==2.0.5
